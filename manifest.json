@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "lucidity",
+  "description": "Convinience actions for GitHub pull requests",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "extension-ui.html"
+  },
+  "permissions": [
+    "activeTab",
+    "*://github.com/*/pull/*/files*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*/pull/*/files*"],
+      "js": ["extension-content.js"]
+    }
+  ]
+}
