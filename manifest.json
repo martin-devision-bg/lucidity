@@ -14,7 +14,8 @@
   "content_scripts": [
     {
       "matches": ["*://github.com/*/pull/*/files*"],
-      "js": ["extension-content.js"]
+      "js": ["extension-content.js"],
+      "css": ["extension-content.css"]
     }
   ]
 }
