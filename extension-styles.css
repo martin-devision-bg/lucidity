@@ -50,7 +50,7 @@ a:hover {
 }
 
 a:active {
-  background: #888;
-  color: #eee;
+  background: #ddd;
+  color: #000;
   transition: all 0.3s;
 }
