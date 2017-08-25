@@ -10,7 +10,7 @@ let actionListPrFiles = () => {
     return;
   }
 
-  let fileHeaders = document.querySelectorAll('div.file-header div.file-info a[title]');
+  let fileHeaders = document.querySelectorAll('div.file:not(.hidden) div.file-header div.file-info a[title]');
   let filePaths = [];
   fileHeaders.forEach(function (element) {
     filePaths.push(element.title);
