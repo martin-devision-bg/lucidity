@@ -30,4 +30,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  var expandFiles = document.getElementById('btn-expand-files');
+  expandFiles.addEventListener('click', function (event) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      console.log(tabs);
+      chrome.tabs.sendMessage(tabs[0].id, {action: "expand-files"}, function(response) {
+        //
+      });
+    });
+  });
+
+  var collapseFiles = document.getElementById('btn-collapse-files');
+  collapseFiles.addEventListener('click', function (event) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      console.log(tabs);
+      chrome.tabs.sendMessage(tabs[0].id, {action: "collapse-files"}, function(response) {
+        //
+      });
+    });
+  });
+
 });
