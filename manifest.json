@@ -9,7 +9,7 @@
   },
   "permissions": [
     "activeTab",
-    "*://github.com/*/pull/*/files*"
+    "*://github.com/*"
   ],
   "content_scripts": [
     {
