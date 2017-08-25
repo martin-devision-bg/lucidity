@@ -34,3 +34,7 @@
 .lucidity-list-pr-files-close-btn:hover {
   background: #f66;
 }
+
+.hidden {
+  display: none;
+}
