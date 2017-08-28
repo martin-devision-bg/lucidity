@@ -23,7 +23,7 @@
   width: 100%;
   border: 0 solid #922;
   text-align: center;
-  background: #f44;
+  background: #d42222;
   height: auto;
   padding: 10px;
   margin: 0 0 20px 0;
@@ -32,7 +32,7 @@
 }
 
 .lucidity-list-pr-files-close-btn:hover {
-  background: #f66;
+  background: #e53333;
 }
 
 .hidden {

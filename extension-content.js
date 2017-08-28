@@ -1,3 +1,5 @@
+let filesFilterValue;
+
 document.body.addEventListener('keyup', (event) => {
   if (event.altKey === true && event.keyCode === 76) {
     actionListPrFiles();
@@ -59,12 +61,19 @@ chrome.runtime.onMessage.addListener(
       actionListPrFiles();
     }
 
+    if (request.action === 'resolve-files-filter-value') {
+      sendResponse({
+        filesFilterValue: filesFilterValue
+      });
+    }
+
     if (request.action === 'filter-files') {
       let allFiles = document.querySelectorAll('div.file');
       allFiles.forEach(function (file) {
         removeClass(file, 'hidden');
       });
 
+      filesFilterValue = request.filterValue;
       if (request.filterValue.length > 0) {
         let files = document.querySelectorAll('div.file div.file-info a:not([title*="' + request.filterValue + '"])');
         files.forEach(function (file) {

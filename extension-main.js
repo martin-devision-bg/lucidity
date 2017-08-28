@@ -1,8 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
   let currentTabId;
+  var filesFilter = document.getElementById('files-filter');
+
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    currentTabId = tabs[0].id
+    currentTabId = tabs[0].id;
+
+    chrome.tabs.sendMessage(currentTabId, {action: "resolve-files-filter-value"}, function(response) {
+      if (response.filesFilterValue !== undefined) {
+        filesFilter.value = response.filesFilterValue;
+      }
+    });
   });
 
   var listPrFiles = document.getElementById('btn-list-pr-files');
@@ -30,7 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.sendMessage(currentTabId, {action: "collapse-files"}, function(response) {});
   });
 
-  var filesFilter = document.getElementById('files-filter');
   filesFilter.addEventListener('keyup', function (event) {
     let filterValue = filesFilter.value;
     chrome.tabs.sendMessage(currentTabId, {action: "filter-files", filterValue: filterValue}, function(response) {});
