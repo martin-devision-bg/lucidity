@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (response.filesFilterValue !== undefined) {
         filesFilter.value = response.filesFilterValue;
       }
+      filesFilter.focus();
     });
   });
 

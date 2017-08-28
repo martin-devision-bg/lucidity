@@ -1,5 +1,5 @@
 html, body {
-  background: #fff;
+  background: #eee;
   color: #000;
   margin: 0;
   padding: 0;
@@ -43,15 +43,15 @@ li:last-child a {
 }
 
 a:hover {
-  background: #f2f2f2;
+  background: #fff;
   color: #444;
-  padding-left: 13px;
+  padding-left: 12px;
   transition: all 0.3s;
 }
 
 a:active {
-  background: #eee;
-  color: #bbb;
+  background: #ddd;
+  color: #444;
   transition: all 0.3s;
 }
 
@@ -61,8 +61,8 @@ small {
 }
 
 .files-filter {
-  margin-top: 20px;
-  padding: 10px;
+  margin: 20px 0 20px 0;
+  padding: 15px 5px 15px 5px;
   width: 100%;
   box-sizing:border-box;
 }

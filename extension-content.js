@@ -1,8 +1,11 @@
-let filesFilterValue;
+let filesFilterValue = '';
+let filesFilterInputGlobal;
 
-document.body.addEventListener('keyup', (event) => {
-  if (event.altKey === true && event.keyCode === 76) {
+document.body.addEventListener('keydown', (event) => {
+  // console.log(event.keyCode);
+  if (event.altKey === true && event.keyCode === 84) {
     actionListPrFiles();
+    filesFilterInputGlobal.focus();
   }
 });
 
@@ -12,28 +15,31 @@ let actionListPrFiles = () => {
     return;
   }
 
-  let fileHeaders = document.querySelectorAll('div.file:not(.hidden) div.file-header div.file-info a[title]');
-  let filePaths = [];
-  fileHeaders.forEach(function (element) {
-    filePaths.push(element.title);
-  });
 
-  filePaths = filePaths.sort();
+
+
+
+
+
   let filesDiv = document.createElement('div');
   filesDiv.setAttribute('id', 'lucidity-list-pr-files-container');
-  let filesDivContent = document.createElement('div');
 
-  let escKeyPressHandler = (event) => {
-    if (event.keyCode === 27) {
-      removeFilesListDivContainer();
-    }
-  }
-  document.body.addEventListener('keyup', escKeyPressHandler);
 
-  let removeFilesListDivContainer = () => {
-    document.body.removeEventListener('keyup', escKeyPressHandler);
-    document.getElementById('lucidity-list-pr-files-container').remove();
-  }
+
+
+  let filesFilter = document.createElement('div');
+  addClass(filesFilter, 'file-filter-container');
+  let filesFilterInput = document.createElement('input');
+  filesFilterInput.value = filesFilterValue;
+  filesFilterInput.setAttribute('type', 'text');
+  filesFilterInput.setAttribute('placeholder', 'Filter by file path');
+  filesFilterInput.addEventListener('keyup', (event) => {
+    // filesFilterValue = filesFilterInput.value;
+    handleFilterFiles(filesFilterInput.value);
+    buildFilesList();
+  });
+  filesFilter.appendChild(filesFilterInput);
+  // filesDiv.appendChild(filesFilter);
 
   let closeButton = document.createElement('div');
   closeButton.innerHTML = 'Close files list';
@@ -42,16 +48,101 @@ let actionListPrFiles = () => {
     removeFilesListDivContainer();
   });
 
-  filePaths.forEach(function (element, index, array) {
-    array[index] = element.replace(/\//g, '&nbsp;/&nbsp;')
+
+
+  let buildFilesList = () => {
+      let oldFilesDivContent = document.getElementById('filesDivContent');
+      if (oldFilesDivContent !== null) {
+        oldFilesDivContent.remove();
+      }
+
+      let filesDivContent = document.createElement('div');
+      filesDivContent.setAttribute('id', 'filesDivContent');
+
+      let fileHeaders = document.querySelectorAll('div.file:not(.hidden) div.file-header div.file-info a[title]');
+      let filePaths = [];
+      fileHeaders.forEach(function (element) {
+        filePaths.push({
+          title: element.title,
+          diffStats: element.previousElementSibling.cloneNode(true),
+          href: element.href
+        });
+      });
+
+      filePaths = filePaths.sort((a, b) => {
+        return a.title > b.title;
+      });
+
+      filePaths.forEach((filePath) => {
+        let fileDiv = document.createElement('div');
+        let fileDivFileLink = document.createElement('a');
+        fileDivFileLink.href = filePath.href;
+        addClass(filePath.diffStats, 'file-list-diff-stats');
+        fileDiv.appendChild(filePath.diffStats);
+        // filePath.title = 'some-folder/second-level/file-with-code.js';
+        fileDivFileLink.innerHTML = filePath.title.replace(/\//g, '<span>/</span>');
+        addClass(fileDivFileLink, 'file-list-file-links');
+        fileDiv.appendChild(fileDivFileLink);
+        filesDivContent.appendChild(fileDiv);
+      });
+
+
+      document.body.addEventListener('keydown', escKeyPressHandler);
+
+
+
+
+
+      addClass(filesDivContent, 'filesContainer');
+      // filesDivContent.innerHTML = filePaths.join(" <br /> ");
+
+      filesDiv.appendChild(closeButton);
+      filesDiv.appendChild(filesFilter);
+      filesDiv.appendChild(filesDivContent);
+      filesDiv.setAttribute('class', 'lucidity-list-pr-files');
+      document.body.appendChild(filesDiv);
+      filesFilterInputGlobal = filesFilterInput;
+      filesFilterInput.focus();
+  };
+
+  buildFilesList();
+}
+
+let escKeyPressHandler = (event) => {
+  if (event.keyCode === 27) {
+    removeFilesListDivContainer();
+  }
+}
+
+let removeFilesListDivContainer = () => {
+  document.body.removeEventListener('keyup', escKeyPressHandler);
+  let listPrFilesContainer = document.getElementById('lucidity-list-pr-files-container');
+  // console.log(listPrFilesContainer);
+  if (listPrFilesContainer !== null) {
+    listPrFilesContainer.remove();
+  }
+}
+
+// request.filterValue.length
+let handleFilterFiles = (filterValue) => {
+  let allFiles = document.querySelectorAll('div.file');
+  allFiles.forEach(function (file) {
+    removeClass(file, 'hidden');
   });
 
-  filesDivContent.innerHTML = filePaths.join(" <br /> ");
-  filesDiv.appendChild(closeButton);
-  filesDiv.appendChild(filesDivContent);
-  filesDiv.setAttribute('class', 'lucidity-list-pr-files');
-  document.body.appendChild(filesDiv);
-}
+  filesFilterValue = filterValue;
+  if (filterValue.length > 0) {
+    let files = document.querySelectorAll('div.file div.file-info a:not([title*="' + filterValue + '"])');
+    files.forEach(function (file) {
+      addClass(file.parentElement.parentElement.parentElement, 'hidden');
+    });
+
+    let oldFilesDivContent = document.getElementById('filesDivContent');
+    if (oldFilesDivContent !== null) {
+      // buildFilesList();
+    }
+  }
+};
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
@@ -68,18 +159,11 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.action === 'filter-files') {
-      let allFiles = document.querySelectorAll('div.file');
-      allFiles.forEach(function (file) {
-        removeClass(file, 'hidden');
-      });
-
-      filesFilterValue = request.filterValue;
-      if (request.filterValue.length > 0) {
-        let files = document.querySelectorAll('div.file div.file-info a:not([title*="' + request.filterValue + '"])');
-        files.forEach(function (file) {
-          addClass(file.parentElement.parentElement.parentElement, 'hidden');
-        });
+      if (filesFilterInputGlobal !== undefined && filesFilterInputGlobal !== null) {
+        filesFilterInputGlobal.value = request.filterValue;
       }
+
+      handleFilterFiles(request.filterValue);
     }
 
 
