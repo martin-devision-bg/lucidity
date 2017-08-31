@@ -2,7 +2,6 @@ let filesFilterValue = '';
 let filesFilterInputGlobal;
 
 document.body.addEventListener('keydown', (event) => {
-  // console.log(event.keyCode);
   if (event.altKey === true && event.keyCode === 84) {
     actionListPrFiles();
     filesFilterInputGlobal.focus();
@@ -15,40 +14,34 @@ let actionListPrFiles = () => {
     return;
   }
 
-
-
-
-
-
-
   let filesDiv = document.createElement('div');
   filesDiv.setAttribute('id', 'lucidity-list-pr-files-container');
-
-
-
 
   let filesFilter = document.createElement('div');
   addClass(filesFilter, 'file-filter-container');
   let filesFilterInput = document.createElement('input');
   filesFilterInput.value = filesFilterValue;
   filesFilterInput.setAttribute('type', 'text');
-  filesFilterInput.setAttribute('placeholder', 'Filter by file path');
+  filesFilterInput.setAttribute('placeholder', 'Filter by file path ( ALT+T to focus | ALT+C clear filter )');
   filesFilterInput.addEventListener('keyup', (event) => {
-    // filesFilterValue = filesFilterInput.value;
-    handleFilterFiles(filesFilterInput.value);
-    buildFilesList();
+    // ALT+C clears the filter
+    if (event.keyCode === 67 && event.altKey === true) {
+      filesFilterInput.value = '';
+    }
+
+    if (event.keyCode !== 18) {
+      handleFilterFiles(filesFilterInput.value);
+      buildFilesList();
+    }
   });
   filesFilter.appendChild(filesFilterInput);
-  // filesDiv.appendChild(filesFilter);
 
   let closeButton = document.createElement('div');
-  closeButton.innerHTML = 'Close files list';
+  closeButton.innerHTML = 'Close files list <small>( press ESC )</small>';
   closeButton.setAttribute('class', 'lucidity-list-pr-files-close-btn');
   closeButton.addEventListener('click', function (event) {
     removeFilesListDivContainer();
   });
-
-
 
   let buildFilesList = () => {
       let oldFilesDivContent = document.getElementById('filesDivContent');
@@ -70,11 +63,33 @@ let actionListPrFiles = () => {
       });
 
       filePaths = filePaths.sort((a, b) => {
-        return a.title > b.title;
+        if (a.title < b.title) {
+          return -1
+        }
+
+        if (a.title > b.title) {
+          return 1;
+        }
+
+        return 0;
       });
+
+      let lastSlashPosition = undefined;
+      let previousFileDiv;
 
       filePaths.forEach((filePath) => {
         let fileDiv = document.createElement('div');
+
+        // visually separate files in different folders
+        let slashPosition = filePath.title.lastIndexOf('/');
+        if (lastSlashPosition !== slashPosition && lastSlashPosition !== undefined) {
+          addClass(fileDiv, 'file-div-folders-visual-separator');
+          addClass(previousFileDiv, 'file-div-folders-visual-separator-previous');
+        }
+        lastSlashPosition = slashPosition;
+        previousFileDiv = fileDiv;
+
+        // build element content
         let fileDivFileLink = document.createElement('a');
         fileDivFileLink.href = filePath.href;
         addClass(filePath.diffStats, 'file-list-diff-stats');
@@ -86,15 +101,9 @@ let actionListPrFiles = () => {
         filesDivContent.appendChild(fileDiv);
       });
 
-
       document.body.addEventListener('keydown', escKeyPressHandler);
 
-
-
-
-
       addClass(filesDivContent, 'filesContainer');
-      // filesDivContent.innerHTML = filePaths.join(" <br /> ");
 
       filesDiv.appendChild(closeButton);
       filesDiv.appendChild(filesFilter);
@@ -117,13 +126,11 @@ let escKeyPressHandler = (event) => {
 let removeFilesListDivContainer = () => {
   document.body.removeEventListener('keyup', escKeyPressHandler);
   let listPrFilesContainer = document.getElementById('lucidity-list-pr-files-container');
-  // console.log(listPrFilesContainer);
   if (listPrFilesContainer !== null) {
     listPrFilesContainer.remove();
   }
 }
 
-// request.filterValue.length
 let handleFilterFiles = (filterValue) => {
   let allFiles = document.querySelectorAll('div.file');
   allFiles.forEach(function (file) {
@@ -146,7 +153,6 @@ let handleFilterFiles = (filterValue) => {
 
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    // console.log(request, sender);
 
     if (request.action === 'list-pr-files') {
       actionListPrFiles();
@@ -166,14 +172,12 @@ chrome.runtime.onMessage.addListener(
       handleFilterFiles(request.filterValue);
     }
 
-
     if (request.action === 'toggle-collapse') {
       var fileHeaders = document.querySelectorAll('div.file-header button.js-details-target');
       fileHeaders.forEach(function (element) {
         element.click();
       });
     }
-
 
     if (request.action === 'collapse-files') {
       var fileHeaders = document.querySelectorAll('div.file:not(.open) div.file-header button.js-details-target');
@@ -182,14 +186,12 @@ chrome.runtime.onMessage.addListener(
       });
     }
 
-
     if (request.action === 'expand-files') {
       var fileHeaders = document.querySelectorAll('div.file.open div.file-header button.js-details-target');
       fileHeaders.forEach(function (element) {
         element.click();
       });
     }
-
 
     if (request.action === 'toggle-wide-mode') {
       let filesContainer = document.querySelectorAll('div.repository-content')[0].parentElement;

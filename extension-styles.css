@@ -61,8 +61,29 @@ small {
 }
 
 .files-filter {
-  margin: 20px 0 20px 0;
+  margin: 20px 0 0 0;
   padding: 15px 5px 15px 5px;
   width: 100%;
   box-sizing:border-box;
+}
+
+.lucidity-logo {
+  font-size: 12pt;
+  padding: 10px 0;
+  text-align: center;
+  color: rgb(125, 125, 125);
+  font-family: sans-serif;
+  font-style: oblique;
+  font-variant: all-small-caps;
+}
+
+.shortcut-tip {
+  color: #fff;
+  display: inline-block;
+  font-size: 8pt;
+  position: absolute;
+  right: 15px;
+  background: #666;
+  padding: 5px;
+  transform: translateY(-3px);
 }
