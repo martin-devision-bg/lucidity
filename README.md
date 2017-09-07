@@ -6,6 +6,7 @@ Chrome extension providing some convenience tricks for pull requests on GitHub
 - Toggle collapse/expand of all files in the PR
 - Expand all files
 - Collapse all files
+- Toggle all "Show outdated" buttons in the Conversation tab of a PR
 - Show a list of files present in the pull request. This allows overview of the structure modifications in the PR.
   - Filter files in the PR by file path
   - Jump to file by clicking on it's name
