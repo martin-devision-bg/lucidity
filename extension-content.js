@@ -193,6 +193,13 @@ chrome.runtime.onMessage.addListener(
       });
     }
 
+    if (request.action === 'show-outdated-comments') {
+      var commentsButtons = document.querySelectorAll('button.show-outdated-button');
+      commentsButtons.forEach(function (element) {
+        element.click();
+      });
+    }
+
     if (request.action === 'toggle-wide-mode') {
       let filesContainer = document.querySelectorAll('div.repository-content')[0].parentElement;
       let originalClass = filesContainer.getAttribute('class');

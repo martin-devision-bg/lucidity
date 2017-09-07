@@ -34,6 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.sendMessage(currentTabId, {action: "expand-files"}, function(response) {});
   });
 
+  let showOutdatedComments = document.getElementById('btn-show-all-outdated-comments');
+  showOutdatedComments.addEventListener('click', function (event) {
+    chrome.tabs.sendMessage(currentTabId, {action: "show-outdated-comments"}, function(response) {});
+  });
+
   let collapseFiles = document.getElementById('btn-collapse-files');
   collapseFiles.addEventListener('click', function (event) {
     chrome.tabs.sendMessage(currentTabId, {action: "collapse-files"}, function(response) {});
