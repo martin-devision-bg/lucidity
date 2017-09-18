@@ -5,7 +5,7 @@
   "version": "1.0",
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "extension-ui.html"
+    "default_popup": "ui.html"
   },
   "permissions": [
     "activeTab",
@@ -14,8 +14,8 @@
   "content_scripts": [
     {
       "matches": ["*://github.com/*"],
-      "js": ["extension-content.js"],
-      "css": ["extension-content.css"]
+      "js": ["content.js"],
+      "css": ["content.css"]
     }
   ]
 }

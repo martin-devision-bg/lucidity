@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
   let filesFilter = document.getElementById('files-filter');
 
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    currentTab = tabs[0];
     currentTabId = tabs[0].id;
+    // console.log(currentTab);
+
 
     chrome.tabs.sendMessage(currentTabId, {action: "resolve-files-filter-value"}, function(response) {
       if (response.filesFilterValue !== undefined) {
