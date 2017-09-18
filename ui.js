@@ -6,8 +6,24 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     currentTab = tabs[0];
     currentTabId = tabs[0].id;
-    // console.log(currentTab);
 
+    let menuItems = document.querySelectorAll('#menu-items li a');
+
+    menuItems.forEach((item) => {
+      if (
+        hasClass(item, 'menu-item-files')
+        && isFilesTab(currentTab.url) === false
+      ) {
+        addClass(item, 'menu-item-disabled');
+      }
+
+      if (
+        hasClass(item, 'menu-item-conversation')
+        && isConversationTab(currentTab.url) === false
+      ) {
+        addClass(item, 'menu-item-disabled');
+      }
+    });
 
     chrome.tabs.sendMessage(currentTabId, {action: "resolve-files-filter-value"}, function(response) {
       if (response.filesFilterValue !== undefined) {
@@ -16,6 +32,19 @@ document.addEventListener('DOMContentLoaded', function () {
       filesFilter.focus();
     });
   });
+
+  let isFilesTab = (url) => {
+    return (url.indexOf('github.com') >= 0) && (url.indexOf('/files') >= 0);
+  }
+
+  let isCommitsTab = (url) => {
+    return (url.indexOf('github.com') >= 0) && (url.indexOf('/commits') >= 0);
+  }
+
+  let isConversationTab = (url) => {
+    return (url.indexOf('github.com') >= 0) && (url.indexOf('/pull') >= 0)
+      && (url.indexOf('/commits') === -1) && (url.indexOf('/files') === -1);
+  }
 
   let listPrFiles = document.getElementById('btn-list-pr-files');
   listPrFiles.addEventListener('click', function (event) {
@@ -63,3 +92,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 });
+
+function addClass (element, className) {
+  let originalClass = element.getAttribute('class');
+  originalClass += ' ' + className;
+  element.setAttribute('class', originalClass);
+}
+
+function removeClass (element, className) {
+  let originalClass = element.getAttribute('class');
+  let wideModeClassPosition = originalClass.indexOf(className);
+
+  if (wideModeClassPosition > -1) {
+    originalClass = originalClass.replace(new RegExp(className, 'g'), '');
+    element.setAttribute('class', originalClass);
+  }
+}
+
+function hasClass (element, className) {
+  let originalClass = element.getAttribute('class');
+  let wideModeClassPosition = originalClass.indexOf(className);
+
+  return (wideModeClassPosition > -1);
+}
