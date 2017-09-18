@@ -2,7 +2,9 @@
 
 Chrome extension providing some convenience tricks for pull requests on GitHub
 
-#### Features:
+![lucidity screenshot](http://martingeorg.github.io/lucidity-screenshot-2.png)
+
+## Features:
 - Toggle collapse/expand of all files in the PR
 - Expand all files
 - Collapse all files
@@ -18,3 +20,4 @@ Chrome extension providing some convenience tricks for pull requests on GitHub
 - Cycle through PR comments
 
 ![lucidity screenshot](http://martingeorg.github.io/lucidity-screenshot.png)
+![lucidity screenshot](http://martingeorg.github.io/lucidity-screenshot-3.png)
