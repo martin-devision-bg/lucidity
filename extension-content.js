@@ -1,10 +1,20 @@
 let filesFilterValue = '';
 let filesFilterInputGlobal;
+let currentCommentPage = -1;
+
 
 document.body.addEventListener('keydown', (event) => {
-  if (event.altKey === true && event.keyCode === 84) {
+  if (event.altKey === true && event.code === 'KeyT') {
     actionListPrFiles();
     filesFilterInputGlobal.focus();
+  }
+
+  if (event.altKey === true && event.code === 'KeyB') {
+    currentCommentPage = cyclePreviousPRComment(getAllPRComments(), currentCommentPage);
+  }
+
+  if (event.altKey === true && event.code === 'KeyN') {
+    currentCommentPage = cycleNextPRComment(getAllPRComments(), currentCommentPage);
   }
 });
 
@@ -25,11 +35,14 @@ let actionListPrFiles = () => {
   filesFilterInput.setAttribute('placeholder', 'Filter by file path ( ALT+T to focus | ALT+C clear filter )');
   filesFilterInput.addEventListener('keyup', (event) => {
     // ALT+C clears the filter
-    if (event.keyCode === 67 && event.altKey === true) {
+    if (event.code === 'KeyC' && event.altKey === true) {
       filesFilterInput.value = '';
     }
 
     if (event.keyCode !== 18) {
+      // Reset the PR comment page counter when filtering files
+      currentCommentPage = -1;
+
       handleFilterFiles(filesFilterInput.value);
       buildFilesList();
     }
@@ -118,7 +131,7 @@ let actionListPrFiles = () => {
 }
 
 let escKeyPressHandler = (event) => {
-  if (event.keyCode === 27) {
+  if (event.code === 'Escape') {
     removeFilesListDivContainer();
   }
 }
@@ -151,6 +164,32 @@ let handleFilterFiles = (filterValue) => {
   }
 };
 
+let getAllPRComments = () => {
+  return document.querySelectorAll('.file.js-file:not(.hidden) > .js-file-content > .blob-wrapper > table.diff-table > tbody > tr.inline-comments.js-inline-comments-container');
+};
+
+let cyclePreviousPRComment = (allComments, pageNumber) => {
+  if (allComments.length === 0) {
+    return pageNumber;
+  }
+
+  pageNumber = pageNumber <= 0 ? allComments.length - 1 : --pageNumber;
+  allComments[pageNumber].scrollIntoView(false);
+
+  return pageNumber;
+};
+
+let cycleNextPRComment = (allComments, pageNumber) => {
+  if (allComments.length === 0) {
+    return pageNumber;
+  }
+
+  pageNumber = ++pageNumber % allComments.length;
+  allComments[pageNumber].scrollIntoView(false);
+
+  return pageNumber;
+};
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
@@ -159,6 +198,9 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.action === 'resolve-files-filter-value') {
+      // Reset the PR comment page counter when filtering files
+      currentCommentPage = -1;
+
       sendResponse({
         filesFilterValue: filesFilterValue
       });
@@ -214,6 +256,13 @@ chrome.runtime.onMessage.addListener(
       }
     }
 
+    if (request.action === 'cycle-previous-pr-comment') {
+      currentCommentPage = cyclePreviousPRComment(getAllPRComments(), currentCommentPage);
+    }
+
+    if (request.action === 'cycle-next-pr-comment') {
+      currentCommentPage = cycleNextPRComment(getAllPRComments(), currentCommentPage);
+    }
 
   }
 );

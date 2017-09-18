@@ -44,6 +44,16 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.sendMessage(currentTabId, {action: "collapse-files"}, function(response) {});
   });
 
+  let cyclePreviousPRComment = document.getElementById('btn-cycle-previous-pr-comment');
+  cyclePreviousPRComment.addEventListener('click', function (event) {
+    chrome.tabs.sendMessage(currentTabId, {action: "cycle-previous-pr-comment"}, function(response) {});
+  });
+
+  let cycleNextPRComment = document.getElementById('btn-cycle-next-pr-comment');
+  cycleNextPRComment.addEventListener('click', function (event) {
+    chrome.tabs.sendMessage(currentTabId, {action: "cycle-next-pr-comment"}, function(response) {});
+  });
+
   filesFilter.addEventListener('keyup', function (event) {
     let filterValue = filesFilter.value;
     chrome.tabs.sendMessage(currentTabId, {action: "filter-files", filterValue: filterValue}, function(response) {});
