@@ -86,6 +86,12 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.sendMessage(currentTabId, {action: "cycle-next-pr-comment"}, function(response) {});
   });
 
+  let toggleShowAllComments = document.getElementById('btn-toggle-show-all-comments');
+  toggleShowAllComments.addEventListener('click', function (event) {
+    chrome.tabs.sendMessage(currentTabId, {action: "toggle-show-all-comments"}, function(response) {});
+  });
+
+
   filesFilter.addEventListener('keyup', function (event) {
     let filterValue = filesFilter.value;
     chrome.tabs.sendMessage(currentTabId, {action: "filter-files", filterValue: filterValue}, function(response) {});

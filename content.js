@@ -264,6 +264,13 @@ chrome.runtime.onMessage.addListener(
       currentCommentPage = cycleNextPRComment(getAllPRComments(), currentCommentPage);
     }
 
+    if (request.action === 'toggle-show-all-comments') {
+      var fileHeaders = document.querySelectorAll('div.file-header input.js-toggle-file-notes');
+      fileHeaders.forEach(function (element) {
+        element.click();
+      });
+    }
+
   }
 );
 
