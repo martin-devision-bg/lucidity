@@ -38,6 +38,7 @@
 
 .wide-mode {
   width: 96%!important;
+  max-width: none!important;
 }
 
 .lucidity-list-pr-files-close-btn {
