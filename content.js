@@ -165,7 +165,7 @@ let handleFilterFiles = (filterValue) => {
 };
 
 let getAllPRComments = () => {
-  return document.querySelectorAll('.file.js-file:not(.hidden) > .js-file-content > .blob-wrapper > table.diff-table > tbody > tr.inline-comments.js-inline-comments-container');
+  return document.querySelectorAll('div.js-file.open > .js-file-content > .js-blob-wrapper > table.diff-table > tbody > tr.inline-comments.js-inline-comments-container');
 };
 
 let cyclePreviousPRComment = (allComments, pageNumber) => {
@@ -215,22 +215,29 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.action === 'toggle-collapse') {
-      var fileHeaders = document.querySelectorAll('div.file-header button.js-details-target');
-      fileHeaders.forEach(function (element) {
+      var fileHeadersCollapse = document.querySelectorAll('div.file-header button.js-details-target');
+      fileHeadersCollapse.forEach(function (element) {
+        element.click();
+      });
+    }
+
+    if (request.action === 'load-diff-all') {
+      var buttonsLoadDiffAll = document.querySelectorAll('button.js-diff-load');
+      buttonsLoadDiffAll.forEach(function (element) {
         element.click();
       });
     }
 
     if (request.action === 'collapse-files') {
-      var fileHeaders = document.querySelectorAll('div.file:not(.open) div.file-header button.js-details-target');
-      fileHeaders.forEach(function (element) {
+      var fileHeadersCollapseFiles = document.querySelectorAll('div.file.open div.file-info button.js-details-target');
+      fileHeadersCollapseFiles.forEach(function (element) {
         element.click();
       });
     }
 
     if (request.action === 'expand-files') {
-      var fileHeaders = document.querySelectorAll('div.file.open div.file-header button.js-details-target');
-      fileHeaders.forEach(function (element) {
+      var fileHeadersExpandFiles = document.querySelectorAll('div.file:not(.open) div.file-info button.js-details-target');
+      fileHeadersExpandFiles.forEach(function (element) {
         element.click();
       });
     }
@@ -265,8 +272,8 @@ chrome.runtime.onMessage.addListener(
     }
 
     if (request.action === 'toggle-show-all-comments') {
-      var fileHeaders = document.querySelectorAll('div.file-header input.js-toggle-file-notes');
-      fileHeaders.forEach(function (element) {
+      var fileHeadersShowAllComments = document.querySelectorAll('div.file-header input.js-toggle-file-notes');
+      fileHeadersShowAllComments.forEach(function (element) {
         element.click();
       });
     }

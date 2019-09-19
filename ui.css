@@ -44,7 +44,7 @@ li:last-child a {
 
 a:hover {
   background: #fff;
-  color: #444;
+  color: #222;
   padding-left: 12px;
   transition: all 0.3s;
 }
@@ -55,15 +55,25 @@ a:active {
   transition: all 0.3s;
 }
 
+a.warn {
+  background: #efa3a3;
+}
+
+a.warn:hover {
+  background: #ffd6d6;
+  color: #222;
+}
+
 small {
   font-size:7pt;
   color: #999;
 }
 
 .files-filter {
-  margin: 20px 0 0 0;
+  margin: 20px 1px 0 1px;
   padding: 15px 5px 15px 5px;
-  width: 100%;
+  /* width: 100%; */
+  width: 298px;
   box-sizing:border-box;
 }
 

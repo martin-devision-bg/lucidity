@@ -56,6 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.tabs.sendMessage(currentTabId, {action: "toggle-collapse"}, function(response) {});
   });
 
+  let loadDiffAll = document.getElementById('btn-load-diff-all');
+  loadDiffAll.addEventListener('click', function (event) {
+    chrome.tabs.sendMessage(currentTabId, {action: "load-diff-all"}, function(response) {});
+  });
+
   let toggleWideMode = document.getElementById('btn-toggle-wide-mode');
   toggleWideMode.addEventListener('click', function (event) {
     chrome.tabs.sendMessage(currentTabId, {action: "toggle-wide-mode"}, function(response) {});
